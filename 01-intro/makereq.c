@@ -97,7 +97,10 @@ int makereq(X509_REQ **req, EVP_PKEY **pkeyp, int bits, int serial, int days)
     EVP_PKEY *pk;
     RSA *rsa;
     X509_NAME *name = NULL;
+
+#ifdef REQUEST_EXTENSIONS
     STACK_OF(X509_EXTENSION) *exts = NULL;
+#endif
 
     if ((pk = EVP_PKEY_new()) == NULL)
         goto err;
@@ -122,9 +125,9 @@ int makereq(X509_REQ **req, EVP_PKEY **pkeyp, int bits, int serial, int days)
      */
 
     X509_NAME_add_entry_by_txt(name, "C",
-            MBSTRING_ASC, "US", -1, -1, 0);
+            MBSTRING_ASC, (const unsigned char *) "US", -1, -1, 0);
     X509_NAME_add_entry_by_txt(name, "CN",
-            MBSTRING_ASC, "OpenSSL Group", -1, -1, 0);
+            MBSTRING_ASC, (const unsigned char *) "OpenSSL Group", -1, -1, 0);
 
 #ifdef REQUEST_EXTENSIONS
     /*
